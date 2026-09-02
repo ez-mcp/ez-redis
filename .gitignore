@@ -1,0 +1,33 @@
+# Secrets first — never commit credential material
+.env
+.env.*
+*.pem
+*.key
+*.p12
+id_rsa*
+*secret*
+*credential*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# uv artifacts (uv.lock is committed, never ignored)
+
+# Editors / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store

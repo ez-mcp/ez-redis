@@ -1,0 +1,23 @@
+# ez-redis commit-time quality gates (plan Part D).
+# Install once per clone:  pre-commit install --install-hooks
+# Offline note: hook repos are fetched once; afterwards runs are offline.
+# No hook may ever silently skip — a missing hook environment fails loudly.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.390
+    hooks:
+      - id: pyright
+        # Documented fallback (plan Part D): if this hook misresolves the
+        # uv-managed venv, replace with a `local` hook running `uv run pyright`.
+        entry: uv run pyright
+        language: system
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.0
+    hooks:
+      - id: gitleaks
