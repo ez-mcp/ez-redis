@@ -12,3 +12,4 @@ htmlcov/
 logs/
 tests/fixtures/adversarial/python/adv_oversize.py
 /docs
+/.pi
