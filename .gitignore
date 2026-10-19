@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+dist/
+*.egg-info/
+.coverage
+coverage.xml
+cov.json
+htmlcov/
+.hypothesis/
+logs/
+tests/fixtures/adversarial/python/adv_oversize.py

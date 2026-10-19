@@ -1,0 +1,7 @@
+# Ruff lint + format hooks, pinned to the same ruff version as the dev group.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.0
+    hooks:
+      - id: ruff-check
+      - id: ruff-format

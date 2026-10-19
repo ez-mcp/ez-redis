@@ -1,0 +1,106 @@
+# EZ-Redis packaging — PLAN-PHASES-1-2.md §4.5.
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14"]
+build-backend = "uv_build"
+
+[project]
+# Static version: uv_build does not support dynamic versions (uv #11718).
+version = "0.1.0"
+name = "ez-redis"
+description = "Redis expertise for AI coding agents: static analysis of application Redis usage"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "ez-redis contributors" }]
+keywords = ["redis", "mcp", "ai-agents", "static-analysis"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = [
+  "msgspec==0.22.0",
+  "platformdirs>=4.13",
+]
+
+[project.optional-dependencies]
+# Declared in Phase 1 (plan §4.5) so the lock entries land with the extra;
+# extras are not installed by default, so ordinary dev/test environments do
+# not pull mcp until Phase 6 consumes it.
+mcp = ["mcp>=2.3,<3"]
+
+[project.scripts]
+# Fail-loud stub in Phase 1 (validates console-script plumbing; real CLI in
+# Phase 5 -- do not declare subcommand-level stubs before their phases).
+ez-redis = "ez_redis.cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest>=8",
+  "pytest-cov",
+  "ruff",
+  "pyright",
+  "hypothesis",
+  "pre-commit",
+  "pip-audit",
+  # Plan §4.5: import-linter is mandated by §I.7 + the Phase-1 DoD (PLAN.MD
+  # §D omits it); the forbid-network contract file itself lands with the
+  # Phase-1 logging work, not in this scaffold.
+  "import-linter",
+]
+
+[tool.uv.build-backend]
+module-name = "ez_redis"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+src = ["src", "tests"]
+# ruff >= 0.13 formats Python code blocks inside Markdown; planning docs
+# (PLAN*.md, docs/) carry aligned pseudocode that must not be churned.
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "RUF", "S"]
+ignore = [
+  # assert is the pytest idiom; tests rely on it
+  "S101",
+  # subprocess with a fixed argv list is the documented pattern (shell=False)
+  "S603",
+  # PATH lookup for the rg binary is intentional (rg discovery, later phases)
+  "S607",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Fixtures may contain long lines and deliberate secret-like strings (Phase 3
+# secrets-app); tests keep the hygiene rules otherwise.
+"tests/**" = ["S", "E501"]
+
+[tool.pyright]
+include = ["src", "tests"]
+typeCheckingMode = "strict"
+pythonVersion = "3.11"
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+  "unit: fast in-process tests of one unit",
+  "golden: byte-comparison tests against pinned golden files",
+  "property: hypothesis property-based tests",
+  "adversarial: hostile-input corpus tests (crash or silent skip = failure)",
+]
+
+[tool.coverage.run]
+source = ["src/ez_redis"]
+branch = true
+
+[tool.coverage.report]
+# Per-module enforcement lives in scripts/coverage_gate.py; this is the
+# package-level floor.
+fail_under = 90

@@ -1,0 +1,757 @@
+<ez_redis_planning_prompt version="1.0">
+
+  <mission>
+    <title>EZ-Redis: Product Architecture and Implementation Planning</title>
+
+```
+<objective>
+  Build EZ-Redis, a production-grade developer tool that helps developers understand, design, optimize, and maintain Redis usage throughout their applications.
+
+  The long-term goal is to make EZ-Redis a natural part of the software development workflow, comparable in convenience and usefulness to Git. The product must help developers make better technical decisions, reduce Redis-related defects, improve caching performance, and simplify development without introducing unnecessary friction.
+
+  EZ-Redis must be more than an MCP server or an LLM wrapper. It should be a reusable Redis analysis and optimization platform consisting of a deterministic core engine, an intelligent decision layer powered by Jev, standardized integrations through MCP, and an optional autonomous agent built with LangGraph.
+
+  Prioritize correctness, measurable performance improvements, developer trust, minimal disruption, maintainability, and practical usefulness over architectural complexity.
+</objective>
+
+<primary_task>
+  Inspect the existing repository, conduct the necessary technical research, consult available specialist agents, critically evaluate the proposed architecture, and produce a comprehensive implementation plan.
+
+  Do not implement any feature or begin any implementation phase until I explicitly approve the completed plan.
+</primary_task>
+```
+  </mission>
+
+<execution_constraints>
+<mode>Planning only.</mode>
+
+```
+<permitted_actions>
+  <item>Inspect the existing repository and its architecture.</item>
+  <item>Read relevant source code, configuration files, tests, and documentation.</item>
+  <item>Research current libraries, APIs, technical approaches, and official documentation.</item>
+  <item>Perform safe, read-only discovery operations.</item>
+  <item>Consult available specialist agents for focused research and design reviews.</item>
+  <item>Prepare architecture diagrams, proposed schemas, pseudocode, dependency recommendations, and implementation plans.</item>
+  <item>Create PLAN.MD containing the completed implementation plan after the research and planning are finished.</item>
+</permitted_actions>
+
+<prohibited_actions>
+  <item>Implement any product functionality.</item>
+  <item>Create, delete, or modify project files other than the explicitly authorized PLAN.MD deliverable.</item>
+  <item>Install, uninstall, or upgrade dependencies.</item>
+  <item>Generate implementation code in the repository.</item>
+  <item>Execute Redis commands that modify data, database mutations, or destructive operations.</item>
+  <item>Modify project configuration, dependency manifests, source code, tests, or existing documentation.</item>
+  <item>Begin implementing any proposed phase before explicit approval.</item>
+  <item>Interpret this request as authorization to perform consequential operations against the user's systems.</item>
+</prohibited_actions>
+
+<plan_file_policy>
+  After completing the research and producing the implementation plan, create PLAN.MD in the repository root, unless the existing repository contains a conflicting file that requires explicit resolution.
+
+  PLAN.MD is the only permitted repository modification during this task. Do not overwrite an existing PLAN.MD without first inspecting it and identifying the conflict.
+
+  Do not use this exception to implement features, create implementation scaffolding, or modify any other files.
+
+  After delivering the plan, stop and wait for explicit approval.
+</plan_file_policy>
+
+<planning_artifacts>
+  Proposed code snippets, schemas, directory structures, API definitions, configuration examples, pseudocode, and diagrams may appear in PLAN.MD as planning material. They must not be written into implementation files.
+</planning_artifacts>
+
+<truthfulness>
+  Do not claim to have inspected files, consulted specialists, tested APIs, benchmarked software, or verified integrations unless those activities were actually performed.
+
+  When a required tool, specialist, source, or repository detail is unavailable, explicitly disclose the limitation and continue with the best supported analysis.
+</truthfulness>
+
+<decision_handling>
+  Identify unresolved architectural questions, explain their trade-offs, and recommend sensible defaults. Do not silently convert uncertain assumptions into established requirements.
+</decision_handling>
+```
+</execution_constraints>
+
+<repository_discovery>
+<objective>
+Establish the actual state of the repository before recommending architectural or implementation changes.
+</objective>
+
+```
+<inspection_targets>
+  <item>Directory structure, source files, current functionality, and existing architecture.</item>
+  <item>Python version requirements, dependency manager, build configuration, and packaging conventions.</item>
+  <item>Existing parsing, semantic analysis, graph processing, Redis, MCP, LLM, and API integrations.</item>
+  <item>Existing Jev or LangGraph integrations, if any.</item>
+  <item>Tests, fixtures, documentation, linting, type checking, and CI workflows.</item>
+  <item>Existing design decisions, compatibility requirements, and known technical debt.</item>
+  <item>Current repository conventions and constraints that affect implementation.</item>
+</inspection_targets>
+
+<requirements>
+  Identify which intended capabilities already exist, which are partially implemented, and which are absent.
+
+  Do not assume the repository is empty. Do not assume architectural decisions made in earlier discussions are implemented or remain appropriate without verification.
+
+  Prefer established repository conventions unless a concrete technical reason justifies changing them. Explain proposed breaking changes, unnecessary duplication, and architectural migrations.
+</requirements>
+```
+</repository_discovery>
+
+<product_architecture>
+<instruction>
+Evaluate the proposed architecture, challenge its weaknesses, and improve it where supported by technical evidence. Treat the following components as proposed responsibilities rather than a requirement to implement every component.
+</instruction>
+
+```
+<core_engine>
+  <title>EZ-Redis Core Engine</title>
+
+  <purpose>
+    The core engine is the foundation of EZ-Redis and the source of truth for deterministic static analysis findings.
+
+    It must operate independently of an LLM, Jev, MCP, and LangGraph. Developers should be able to use core functionality through a Python API and CLI without requiring an AI provider or network access, except for operations that explicitly depend on external services.
+  </purpose>
+
+  <target_languages>
+    <language>Python</language>
+    <language>JavaScript</language>
+    <language>TypeScript</language>
+    <language>TSX</language>
+    <language>Java</language>
+  </target_languages>
+
+  <analysis_pipeline>
+    <step order="1">Discover source files and identify supported languages.</step>
+    <step order="2">Parse source code and validate syntax where appropriate.</step>
+    <step order="3">Perform language-specific semantic analysis.</step>
+    <step order="4">Normalize relevant information into a shared Redis intermediate representation (IR).</step>
+    <step order="5">Perform control-flow, data-flow, and cache-key dependency analysis.</step>
+    <step order="6">Evaluate deterministic static-analysis rules.</step>
+    <step order="7">Correlate findings with runtime telemetry when available.</step>
+    <step order="8">Produce structured findings with source locations, evidence, severity, and limitations.</step>
+    <step order="9">Generate and evaluate optimization recommendations.</step>
+    <step order="10">Support optional repair, regression testing, and verification workflows.</step>
+  </analysis_pipeline>
+
+  <intermediate_representation>
+    Evaluate how the shared IR should represent:
+    <item>Redis clients and client operations.</item>
+    <item>Commands, keys, values, and key construction.</item>
+    <item>TTL settings and expiration behavior.</item>
+    <item>Redis data structures and access patterns.</item>
+    <item>Read and write paths.</item>
+    <item>Cache invalidation and refresh mechanisms.</item>
+    <item>Transactions, pipelines, and scripts.</item>
+    <item>Relationships between cached values and authoritative data stores.</item>
+    <item>Cross-file dependencies and relevant program flows.</item>
+    <item>Evidence provenance, analysis confidence, approximations, and unknown information.</item>
+  </intermediate_representation>
+
+  <semantic_analysis>
+    Evaluate support for dynamically constructed keys, aliases, cross-file references, wrappers, abstractions, decorators, framework integrations, and indirect Redis access.
+
+    Clearly distinguish syntax-level observations from resolved semantic relationships and inferred behavior. Syntax parsing alone must never be presented as proof of complete program semantics.
+
+    Design language adapters that can evolve independently while producing a common IR. Justify any language-specific capabilities that cannot be represented reliably in the shared model.
+  </semantic_analysis>
+</core_engine>
+
+<static_and_dynamic_analysis>
+  <objective>
+    Analyze actual application caching behavior rather than relying exclusively on generic Redis best practices.
+  </objective>
+
+  <analysis_categories>
+    <category>Missing, excessive, or inappropriate TTLs.</category>
+    <category>Cache invalidation defects and stale-data risks.</category>
+    <category>Inconsistent cache-aside implementations.</category>
+    <category>Inefficient Redis commands and data structures.</category>
+    <category>Excessive serialization and payload sizes.</category>
+    <category>Cache stampedes and hot-key risks.</category>
+    <category>Unnecessary cache misses and repeated database reads.</category>
+    <category>Memory inefficiencies and eviction risks.</category>
+    <category>Incorrect or inefficient rate-limiting implementations.</category>
+    <category>Redis Search and vector-search usage.</category>
+    <category>Connection management, transactions, pipelines, and batching.</category>
+    <category>Application-level bottlenecks involving Redis.</category>
+    <category>Key naming, expiration, data layout, and access-pattern optimization.</category>
+  </analysis_categories>
+
+  <evidence_requirements>
+    Classify each finding according to whether it can be established using static analysis, runtime evidence, or a combination of both.
+
+    For runtime analysis, investigate safe, opt-in integrations with Redis metrics, application telemetry, tracing, and controlled benchmarks.
+
+    Never claim that an optimization improves performance merely because a heuristic, LLM, or Jev predicts an improvement. Where practical, validate changes using representative measurements and disclose benchmark limitations.
+  </evidence_requirements>
+
+  <operational_safety>
+    Live Redis inspection must be read-only by default.
+
+    Operations that can modify data, change configuration, disrupt service, or affect production traffic require explicit authorization, appropriate isolation, and safeguards.
+
+    Do not assume all environments permit the same diagnostic commands or telemetry access.
+  </operational_safety>
+</static_and_dynamic_analysis>
+
+<jev_decision_layer>
+  <title>Jev Decision and Recommendation Layer</title>
+
+  <research_requirements>
+    Investigate current Jev documentation, supported APIs, integration mechanisms, capabilities, limitations, licensing, pricing where relevant, and service requirements.
+
+    Verify the current API and integration model rather than relying on assumptions or invented interfaces.
+  </research_requirements>
+
+  <primary_purpose>
+    Jev should evaluate structured evidence about a repository and help EZ-Redis determine which caching patterns and optimization strategies best fit specific application data flows.
+
+    This is a central product capability, not merely a classifier that assigns severity to lint warnings.
+  </primary_purpose>
+
+  <candidate_patterns>
+    <pattern>Cache-aside.</pattern>
+    <pattern>Read-through caching.</pattern>
+    <pattern>Write-through caching.</pattern>
+    <pattern>Write-behind caching.</pattern>
+    <pattern>Prefetching and pre-populated caches.</pattern>
+    <pattern>Other suitable Redis caching patterns or combinations of patterns.</pattern>
+  </candidate_patterns>
+
+  <decision_evidence>
+    <factor>Read/write ratios and access patterns.</factor>
+    <factor>Authoritative data sources.</factor>
+    <factor>Data freshness and consistency requirements.</factor>
+    <factor>Cache invalidation and refresh behavior.</factor>
+    <factor>TTL policies.</factor>
+    <factor>Latency and availability requirements.</factor>
+    <factor>Workload characteristics and runtime metrics.</factor>
+    <factor>Failure behavior and operational complexity.</factor>
+    <factor>Memory constraints and expected data volume.</factor>
+    <factor>Existing application architecture and Redis usage.</factor>
+  </decision_evidence>
+
+  <decision_pipeline>
+    <step order="1">The core engine extracts structured repository evidence.</step>
+    <step order="2">Candidate caching patterns are identified.</step>
+    <step order="3">Jev evaluates bounded, relevant decisions using the available evidence.</step>
+    <step order="4">Deterministic application logic applies compatibility constraints and decision policies.</step>
+    <step order="5">EZ-Redis generates a recommendation with supporting evidence, rationale, uncertainty, trade-offs, alternatives, and required follow-up.</step>
+    <step order="6">The developer reviews and approves or rejects recommendations before consequential changes occur.</step>
+  </decision_pipeline>
+
+  <uncertainty_management>
+    Distinguish verified repository facts from assumptions, inferences, and missing information.
+
+    When requirements cannot be established from source code or telemetry, ask targeted questions instead of inventing requirements.
+
+    Evaluate how Jev should handle:
+    <item>Missing or contradictory evidence.</item>
+    <item>Uncertain or ambiguous decisions.</item>
+    <item>Invalid or incomplete responses.</item>
+    <item>Unavailable external services.</item>
+    <item>Cases where no candidate pattern satisfies known constraints.</item>
+  </uncertainty_management>
+
+  <architectural_constraints>
+    A Jev confidence score must not substitute for measured performance or correctness verification.
+
+    Jev must be isolated behind an internal interface. The core engine must remain independent of Jev's implementation, with deterministic fallback behavior when the service is unavailable or a reliable recommendation cannot be established.
+  </architectural_constraints>
+</jev_decision_layer>
+
+<langgraph_agent>
+  <title>LangGraph Coding and Optimization Agent</title>
+
+  <purpose>
+    Evaluate LangGraph as an orchestration framework for complex, multi-step workflows involving reasoning, tool calls, evidence collection, repair proposals, approval, and verification.
+
+    The agent operates on top of the core engine. It must not replace deterministic analysis or become the only way to access product functionality.
+  </purpose>
+
+  <responsibilities>
+    <item>Investigate findings across multiple files.</item>
+    <item>Trace cache-key dependencies and invalidation paths.</item>
+    <item>Gather additional evidence when necessary.</item>
+    <item>Consult Jev on bounded caching-strategy decisions.</item>
+    <item>Develop implementation and repair plans.</item>
+    <item>Propose source-code and Redis-configuration changes.</item>
+    <item>Request approval for consequential operations.</item>
+    <item>Apply approved changes in isolated environments.</item>
+    <item>Run relevant tests, linting, and static checks.</item>
+    <item>Benchmark changes where appropriate.</item>
+    <item>Report successful, unsuccessful, and inconclusive outcomes accurately.</item>
+  </responsibilities>
+
+  <workflow_design>
+    Define explicit graph state, node responsibilities, routing decisions, stopping conditions, bounded retries, error handling, and verification stages.
+
+    Investigate checkpointing, resumability, human-in-the-loop approval, execution limits, and recovery from partial failures.
+
+    Do not use autonomous agents for operations that can be performed more reliably and cheaply through deterministic functions.
+
+    The agent must never silently apply high-risk changes or claim an optimization is correct without adequate evidence.
+  </workflow_design>
+</langgraph_agent>
+
+<mcp_and_developer_integrations>
+  <title>MCP Server and Developer Integrations</title>
+
+  <purpose>
+    Provide an MCP integration that exposes EZ-Redis capabilities to compatible AI clients, including GitHub Copilot in VS Code.
+  </purpose>
+
+  <research_requirements>
+    Investigate the current MCP Python SDK, supported transports, authentication requirements, compatibility constraints, and the appropriate separation between MCP and internal application services.
+  </research_requirements>
+
+  <candidate_tools>
+    <tool>analyze_caching</tool>
+    <tool>analyze_project</tool>
+    <tool>inspect_redis_usage</tool>
+    <tool>recommend_caching_pattern</tool>
+    <tool>inspect_runtime_metrics</tool>
+    <tool>explain_finding</tool>
+    <tool>plan_cache_optimization</tool>
+    <tool>generate_patch</tool>
+    <tool>validate_patch</tool>
+  </candidate_tools>
+
+  <tool_design>
+    The preceding tool names are candidates, not a finalized API.
+
+    Consolidate, rename, or separate tools based on real use cases, clear contracts, discoverability, and usability.
+
+    Define input schemas, output schemas, error behavior, permission requirements, execution limits, and expected side effects for every proposed tool.
+
+    MCP must remain a thin adapter over reusable application services. Business logic belongs in the core engine and application layer.
+  </tool_design>
+
+  <fastapi_evaluation>
+    Determine whether FastAPI is needed alongside the MCP SDK.
+
+    If a separate HTTP API would provide meaningful value, define its responsibilities, authentication model, deployment requirements, and relationship with MCP.
+
+    Do not introduce FastAPI merely because it is familiar or because the application uses Python.
+  </fastapi_evaluation>
+
+  <activation_and_interception>
+    Do not assume MCP automatically intercepts every Redis-related conversation or every Redis query executed anywhere in a developer's system.
+
+    Investigate practical approaches for making EZ-Redis available when relevant:
+    <approach>MCP tool discovery and invocation by compatible clients.</approach>
+    <approach>Custom Copilot agent definitions and repository instructions.</approach>
+    <approach>IDE-specific integrations where justified.</approach>
+    <approach>Explicit CLI and API invocation.</approach>
+    <approach>Client-library instrumentation and middleware.</approach>
+    <approach>Query interception within supported, explicitly instrumented execution paths.</approach>
+
+    Explain the feasibility, limitations, maintenance costs, and security implications of each approach.
+
+    The product should assist developers when Redis-related work occurs without claiming universal interception or depending on behavior outside its control.
+  </activation_and_interception>
+</mcp_and_developer_integrations>
+```
+</product_architecture>
+
+<repository_knowledge_and_documentation>
+<objective>
+Maintain an accurate, evidence-backed, evolving description of how Redis is used in each analyzed repository. This information should improve subsequent analysis and guide compatible coding agents.
+</objective>
+
+```
+<candidate_documents>
+  <document name="CACHING.md">
+    Describe the application's caching architecture, identified patterns, cache boundaries, data freshness requirements, TTL policies, invalidation mechanisms, and relevant design decisions.
+  </document>
+
+  <document name="RATE-LIMITING.md">
+    Describe rate-limiting implementations, Redis commands and data structures, key design, expiry semantics, windowing strategies, limits, and identified correctness or performance concerns.
+  </document>
+
+  <document name="IRIS.md">
+    First investigate and verify what the term IRIS refers to in the repository's context.
+
+    Do not assume it identifies a Redis integration or create technology-specific documentation until its meaning and scope are confirmed.
+  </document>
+
+  <document name="REDIS-SEARCH.md">
+    Describe Redis Search usage, schemas and indexes, query patterns, filters, result handling, and relevant performance considerations.
+  </document>
+</candidate_documents>
+
+<additional_documentation>
+  Evaluate whether additional documents are warranted for vector search, Redis data structures, cache invalidation, connection management, transactions, pipelines, key conventions, and other Redis-specific capabilities.
+
+  Do not create empty or irrelevant documents merely to satisfy a predetermined list.
+
+  Generate documentation according to observed usage, repository configuration, available evidence, and developer requirements.
+
+  Determine whether documents belong at the repository root or in a dedicated documentation directory. Preserve requested filenames where appropriate and explain the trade-offs of alternative layouts.
+</additional_documentation>
+
+<documentation_lifecycle>
+  Plan how the system will:
+  <requirement>Generate documentation from actual repository evidence.</requirement>
+  <requirement>Reference relevant source files, symbols, and locations.</requirement>
+  <requirement>Distinguish inferred information from facts explicitly confirmed by the developer.</requirement>
+  <requirement>Record assumptions, uncertainty, and unresolved questions.</requirement>
+  <requirement>Detect when documentation becomes stale after source-code changes.</requirement>
+  <requirement>Update documentation incrementally without overwriting unrelated user changes.</requirement>
+  <requirement>Preserve developer-approved architectural decisions.</requirement>
+  <requirement>Avoid duplicating information already maintained elsewhere.</requirement>
+  <requirement>Handle Git diffs, merge conflicts, and concurrent changes safely.</requirement>
+  <requirement>Avoid retaining secrets, credentials, sensitive data, or unnecessary source-code excerpts.</requirement>
+</documentation_lifecycle>
+
+<provenance_and_consistency>
+  Evaluate whether a manifest or metadata file is needed to track generated documents, analysis versions, evidence provenance, and the state of prior analyses.
+
+  Documentation must not become an unquestioned source of truth. Current source code and verified runtime evidence must be able to contradict or supersede stale documentation.
+
+  Plan conflict detection, regeneration behavior, user-edit preservation, and review of material documentation changes.
+</provenance_and_consistency>
+```
+</repository_knowledge_and_documentation>
+
+<interactive_discovery>
+<objective>
+Determine what the analyzer can establish independently and ask the developer only for information that materially affects a recommendation.
+</objective>
+
+```
+<process>
+  <step order="1">Inspect source code, configuration, existing documentation, and telemetry where authorized.</step>
+  <step order="2">Identify relevant unknowns, inconsistencies, and limitations.</step>
+  <step order="3">Perform the analysis that can proceed without additional input.</step>
+  <step order="4">Ask focused questions about requirements that cannot be reliably inferred.</step>
+  <step order="5">Generate evidence-backed recommendations with alternatives and trade-offs.</step>
+  <step order="6">Allow the developer to approve, reject, or revise consequential decisions.</step>
+</process>
+
+<candidate_questions>
+  <question>Acceptable cache staleness and freshness requirements.</question>
+  <question>Consistency and invalidation requirements.</question>
+  <question>Expected workload, access patterns, and data volume.</question>
+  <question>Rate-limiting semantics and enforcement requirements.</question>
+  <question>Redis deployment, availability, and operational constraints.</question>
+  <question>Performance, cost, reliability, and maintenance priorities.</question>
+</candidate_questions>
+
+<interaction_constraints>
+  Do not overwhelm developers with long questionnaires. Never ask a question that repository inspection could answer reliably.
+
+  Permit preliminary analysis to proceed while remaining uncertainties are documented.
+
+  Present recommendations with evidence, alternatives, benefits, risks, and trade-offs. Developers retain control over architectural decisions and consequential changes.
+</interaction_constraints>
+```
+</interactive_discovery>
+
+<technical_research>
+<instructions>
+Read the relevant official documentation and inspect implementations when they can resolve architectural questions.
+
+```
+  Do not merely enumerate URLs. Explain what each source contributes to the design and which conclusions it supports.
+
+  Prefer official documentation, primary source code, and maintainers' guidance over unsupported claims.
+</instructions>
+
+<redis_resources>
+  <resource name="Redis Agent Skills" url="https://github.com/redis/agent-skills"/>
+  <resource name="Official Redis MCP Server" url="https://github.com/redis/mcp-redis"/>
+  <resource name="Redis Vector Library for Python" url="https://github.com/redis/redis-vl-python"/>
+  <resource name="Redis Documentation Repository" url="https://github.com/redis/docs"/>
+  <resource name="Redis Source Code" url="https://github.com/redis/redis"/>
+</redis_resources>
+
+<resource_evaluation>
+  Use the official Redis MCP server as a reference for existing capabilities and potential complementary functionality. Determine which functions EZ-Redis should implement, which should reuse supported libraries, and which should be delegated to existing tools.
+
+  Evaluate RedisVL only for capabilities that provide genuine value to EZ-Redis. Do not include it merely because it is available.
+
+  Inspect Redis source code when necessary to understand command semantics, data structures, performance characteristics, and implementation constraints. Do not reproduce Redis internals unnecessarily.
+</resource_evaluation>
+
+<caching_references>
+  <resource name="Redis Cache-Aside Documentation" url="https://redis.io/docs/latest/develop/use-cases/cache-aside/"/>
+  <resource name="Azure Cache-Aside Architecture Guidance" url="https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside"/>
+  <resource name="Redis Cache-Layer Architecture Guide" url="https://redis.io/blog/cache-layer-architecture-guide/"/>
+  <resource name="Redis Cache Consistency Strategies" url="https://redis.io/blog/cache-consistency-strategies/"/>
+  <resource name="Redis Prefetch Cache Guide" url="https://redis.io/docs/latest/develop/use-cases/prefetch-cache/"/>
+</caching_references>
+
+<additional_research>
+  Research the current official documentation for Jev, LangGraph, MCP, FastAPI, selected parsing libraries, and other dependencies under consideration.
+
+  Verify current APIs, version compatibility, maintenance status, supported Python versions, licensing, and integration limitations.
+
+  Prefer stable, supported interfaces and verify important details before recommending dependencies or architectural commitments.
+
+  Distinguish established capabilities from assumptions, experimental approaches, and proposed future features.
+</additional_research>
+```
+</technical_research>
+
+<technology_and_dependencies>
+<objective>
+Recommend an appropriate technology stack for the complete product rather than only the MCP server.
+</objective>
+
+```
+<evaluation_categories>
+  <category>Python version and package management.</category>
+  <category>Multi-language parsing and semantic analysis.</category>
+  <category>Shared intermediate representation and schema validation.</category>
+  <category>Control-flow and data-flow analysis.</category>
+  <category>Redis connectivity and runtime inspection.</category>
+  <category>Command-line interface.</category>
+  <category>MCP server implementation.</category>
+  <category>Optional FastAPI services.</category>
+  <category>Jev integration.</category>
+  <category>LangGraph orchestration.</category>
+  <category>Model-provider integrations.</category>
+  <category>Logging, diagnostics, and observability.</category>
+  <category>Unit testing, integration testing, and benchmarking.</category>
+  <category>Type checking, formatting, and linting.</category>
+  <category>Packaging, distribution, and deployment.</category>
+</evaluation_categories>
+
+<dependency_principles>
+  Prefer a small dependency footprint and clear module boundaries.
+
+  Separate mandatory core dependencies from optional agent, MCP, model-provider, and telemetry dependencies where appropriate.
+
+  Respect existing repository conventions. If no suitable package-management workflow exists, recommend a reproducible workflow with an appropriate dependency lockfile and distribution strategy.
+
+  Do not install dependencies during planning.
+
+  For every significant library, explain its purpose, alternatives, compatibility constraints, maintenance considerations, and whether the functionality could be implemented more reliably without introducing another dependency.
+</dependency_principles>
+```
+</technology_and_dependencies>
+
+<production_readiness>
+<objective>
+Treat security, reliability, performance, and operational safety as architectural requirements from the beginning.
+</objective>
+
+```
+<review_areas>
+  <area>Filesystem access boundaries and repository isolation.</area>
+  <area>Untrusted repository content and prompt injection.</area>
+  <area>Secret and credential handling.</area>
+  <area>Redis authentication, TLS, and least-privilege access.</area>
+  <area>Safe runtime inspection and diagnostic permissions.</area>
+  <area>Command execution, process isolation, and sandboxing.</area>
+  <area>Human approval for consequential operations.</area>
+  <area>Timeouts, cancellation, resource limits, and bounded retries.</area>
+  <area>Failure recovery and partial execution.</area>
+  <area>LLM and Jev service outages and invalid responses.</area>
+  <area>Observability and actionable diagnostics.</area>
+  <area>Concurrency and state isolation between repositories.</area>
+  <area>Large-repository performance and scalability.</area>
+  <area>Incremental analysis and safe caching of analysis results.</area>
+  <area>Deterministic outputs and reproducibility where required.</area>
+  <area>API, MCP, and client compatibility.</area>
+  <area>Dependency and software supply-chain security.</area>
+  <area>Generated documentation versioning and migrations.</area>
+  <area>Backward compatibility and upgrade strategy.</area>
+</review_areas>
+
+<security_constraints>
+  Treat source code, repository documents, external tool output, telemetry, and model-generated content as untrusted inputs.
+
+  Repository instructions and model output must never override system-level security policies.
+
+  Separate read-only analysis from operations that modify application source code, Redis data, infrastructure, or application behavior.
+
+  Design explicit permission boundaries, approval checks, auditability, and isolation appropriate to each operation.
+</security_constraints>
+```
+</production_readiness>
+
+<testing_and_evaluation>
+<objective>
+Design an evaluation strategy that measures actual correctness, usefulness, reliability, and performance rather than counting implemented features.
+</objective>
+
+```
+<test_categories>
+  <category>Unit tests for parsing, IR construction, graph analysis, and individual rules.</category>
+  <category>Language-specific fixtures covering realistic Redis client usage.</category>
+  <category>Integration tests for MCP and supported Redis environments.</category>
+  <category>Adversarial input, malformed source, and unsupported syntax tests.</category>
+  <category>Regression tests for known defects and previous failures.</category>
+  <category>Tests covering dynamic keys, aliases, wrappers, pipelines, and invalidation paths.</category>
+  <category>Tests for incomplete, ambiguous, and conflicting evidence.</category>
+  <category>Jev evaluations using labeled examples and expected decisions.</category>
+  <category>Agent tests covering tool failures, incorrect recommendations, retries, and approval requirements.</category>
+  <category>Benchmarks covering analysis latency, memory usage, runtime overhead, and repository size.</category>
+  <category>Measurements of false positives, false negatives, and recommendation quality.</category>
+  <category>Tests that verify proposed code changes preserve application behavior.</category>
+  <category>Security tests for unauthorized filesystem and Redis access.</category>
+</test_categories>
+
+<acceptance_criteria>
+  Define measurable acceptance criteria, testing requirements, and quality gates for every implementation phase.
+
+  Distinguish the speed of EZ-Redis analysis from improvements in the target application's runtime performance.
+
+  Evaluate whether proposed optimizations improve relevant metrics without violating freshness, consistency, correctness, or operational requirements.
+
+  Do not claim an improvement without appropriate supporting evidence.
+</acceptance_criteria>
+```
+</testing_and_evaluation>
+
+<specialist_consultation>
+<instruction>
+Consult available specialist agents, preferably in parallel, and request focused, technically substantive reviews. Do not claim specialist consultation occurred unless the corresponding work was actually completed.
+</instruction>
+
+```
+<specialist role="software_architecture">
+  Review system architecture, module boundaries, interfaces, data flow, extensibility, and alternative designs.
+</specialist>
+
+<specialist role="static_analysis">
+  Review parsing strategy, language support, shared Redis IR, semantic analysis, and the guarantees that can realistically be provided.
+</specialist>
+
+<specialist role="redis_engineering">
+  Review caching patterns, command semantics, data structures, TTLs, invalidation, consistency, and performance recommendations.
+</specialist>
+
+<specialist role="ai_and_decision_systems">
+  Evaluate Jev's appropriate role, decision decomposition, uncertainty handling, fallback behavior, and reliability.
+</specialist>
+
+<specialist role="agent_orchestration">
+  Review LangGraph workflows, state management, checkpointing, retries, approval gates, and the risks of autonomous modifications.
+</specialist>
+
+<specialist role="developer_tooling_and_mcp">
+  Evaluate MCP architecture, Copilot integration, tool discovery, CLI integration, and developer experience.
+</specialist>
+
+<specialist role="security_and_quality">
+  Identify attack surfaces, isolation requirements, failure modes, testing gaps, and production risks.
+</specialist>
+
+<consultation_requirements>
+  Ask each available specialist to identify:
+  <item>The strongest alternative architecture.</item>
+  <item>The principal technical risks.</item>
+  <item>Assumptions requiring validation.</item>
+  <item>Recommendations that conflict with the proposed design.</item>
+  <item>Evidence or testing needed to support the recommendations.</item>
+
+  Reconcile disagreements rather than merely aggregating suggestions. Produce one coherent proposed architecture and explain important choices, rejected alternatives, and the reasoning behind those decisions.
+
+  When a specialist role is unavailable, perform a corresponding review independently where feasible and disclose that limitation. Do not fabricate specialist feedback.
+</consultation_requirements>
+```
+</specialist_consultation>
+
+<required_implementation_plan>
+<instruction>
+Produce a comprehensive plan in PLAN.MD. The plan must be specific enough to support implementation phase by phase without requiring a fresh architectural investigation for every phase.
+</instruction>
+
+```
+<section id="A" title="Executive Summary">
+  Describe the recommended architecture, major components, product capabilities, and most consequential decisions.
+</section>
+
+<section id="B" title="Current Repository Assessment">
+  Summarize verified repository state, existing functionality, architectural constraints, established conventions, and technical debt.
+</section>
+
+<section id="C" title="Proposed Architecture">
+  Include an architecture diagram and explain the responsibilities, interfaces, dependencies, and boundaries of the principal components.
+
+  Show the flow from source code and telemetry through the shared IR, findings, Jev, MCP, and LangGraph.
+
+  Identify deterministic components, probabilistic decision-making, optional capabilities, and external service dependencies.
+</section>
+
+<section id="D" title="Component and Dependency Decisions">
+  Provide a justified dependency inventory, optional dependency groups, compatibility constraints, alternatives, packaging recommendations, and maintenance considerations.
+</section>
+
+<section id="E" title="Data Contracts and Interfaces">
+  Propose principal domain models, the shared IR, finding schema, Jev decision schema, MCP tool contracts, error models, and module boundaries.
+
+  Include illustrative schemas and pseudocode where useful, without implementing them.
+</section>
+
+<section id="F" title="Repository Documentation Lifecycle">
+  Specify which Markdown files should be generated, when each is applicable, how content is derived and maintained, how stale documentation is detected, and how future analyses consume the documentation.
+</section>
+
+<section id="G" title="Detailed Implementation Phases">
+  Divide implementation into small, ordered, independently testable phases.
+
+  Each phase must define:
+  <requirement>Objective.</requirement>
+  <requirement>Scope and explicit non-goals.</requirement>
+  <requirement>Expected files and modules affected.</requirement>
+  <requirement>Dependencies and prerequisites.</requirement>
+  <requirement>Technical approach.</requirement>
+  <requirement>Tests and acceptance criteria.</requirement>
+  <requirement>Risks and rollback strategy.</requirement>
+  <requirement>Definition of done.</requirement>
+
+  Prioritize a useful, reliable core before introducing expensive or high-complexity autonomous features.
+</section>
+
+<section id="H" title="Evaluation and Benchmarking">
+  Define datasets, fixtures, measurements, and quality gates for analyzer accuracy, recommendation quality, agent behavior, analysis performance, and target-application improvements.
+</section>
+
+<section id="I" title="Security and Operational Readiness">
+  Document permission boundaries, security controls, failure handling, isolation, observability, performance limits, and deployment considerations.
+</section>
+
+<section id="J" title="Risks, Trade-offs, and Unresolved Questions">
+  Identify high-risk assumptions, infeasible or misleading requirements, design alternatives, and decisions requiring developer input.
+
+  Recommend defaults when possible and distinguish known facts from unresolved uncertainty.
+</section>
+
+<section id="K" title="Final Implementation Checklist">
+  Provide an ordered checklist of proposed work, phase dependencies, acceptance criteria, and objective completion conditions.
+</section>
+```
+</required_implementation_plan>
+
+<quality_standards>
+<principle>Prioritize correctness, developer trust, maintainability, and measurable usefulness over architectural complexity.</principle>
+<principle>Do not assume deterministic analysis requires an LLM.</principle>
+<principle>Do not assume Jev can infer complete application semantics from an entire repository without structured evidence.</principle>
+<principle>Do not assume MCP guarantees automatic invocation whenever Redis is mentioned.</principle>
+<principle>Do not claim universal Redis query interception without explicit instrumentation or control of the execution path.</principle>
+<principle>Do not assume all caching problems can be solved by adding a TTL.</principle>
+<principle>Do not recommend a caching pattern without evaluating workload, freshness, consistency, failure behavior, and operational cost.</principle>
+<principle>Do not introduce a complex multi-agent system before establishing that simpler workflows are inadequate.</principle>
+<principle>Do not introduce dependencies merely because they are popular or available.</principle>
+<principle>Do not claim that benchmarks, tests, integrations, or specialist reviews were completed unless they actually were.</principle>
+<principle>Distinguish verified facts, assumptions, proposals, inferences, and unresolved decisions throughout the report.</principle>
+<principle>Challenge unnecessary, infeasible, overly expensive, redundant, or technically incorrect requirements.</principle>
+</quality_standards>
+
+<final_instruction>
+Inspect the repository, conduct the necessary research, consult available specialists, critically evaluate the proposed architecture, and prepare the complete implementation plan.
+
+```
+Create PLAN.MD as the only permitted repository modification during this task. Do not implement the product, modify implementation files, install dependencies, or begin any implementation phase.
+
+After the plan is complete, stop and wait for my explicit approval before proceeding with implementation.
+```
+</final_instruction>
+
+</ez_redis_planning_prompt>
